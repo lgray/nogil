@@ -205,7 +205,7 @@ _Py_atomic_fence_release(void);
 static inline int
 _Py_atomic_uintptr_is_zero(uintptr_t *address)
 {
-#if (defined(__GNUC__) && defined(__GCC_ASM_FLAG_OUTPUTS__))
+#if defined(__GNUC__) && defined(__GCC_ASM_FLAG_OUTPUTS__) && defined(__x86_64__)
     int out;
     __asm__ (
         "cmpq\t$0, %[address]"
@@ -223,7 +223,7 @@ _Py_atomic_compare_uintptr_relaxed(uintptr_t *address, uintptr_t value)
 {
     // GCC and clang generate an unecessary `mov` instead of using
     // `cmp` with a memory operand. The inline assembly avoids this.
-#if (defined(__GNUC__) && defined(__GCC_ASM_FLAG_OUTPUTS__))
+#if defined(__GNUC__) && defined(__GCC_ASM_FLAG_OUTPUTS__) && defined(__x86_64__)
     int out;
     __asm__ (
         "cmp    %[value], %[address]"
